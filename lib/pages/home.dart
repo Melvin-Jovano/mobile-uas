@@ -20,6 +20,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: Drawer(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+              topRight: Radius.circular(30),
+              bottomRight: Radius.circular(30)),
+          ),
+          backgroundColor: const Color(0xFF202020),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Text('placeholder')
+              ],
+            ),
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
 
@@ -30,7 +47,6 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Pallete.primary,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          leading: const Icon(Icons.menu),
           title: const Row(
             children: [
               Text('Padang Bulan Selayang Ii'),
