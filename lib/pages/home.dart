@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +5,7 @@ import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
+import 'package:mobile_uas/utils/random_weather.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,11 +28,120 @@ class _HomePageState extends State<HomePage> {
           ),
           backgroundColor: const Color(0xFF202020),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(25),
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                Text('placeholder')
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(Icons.settings, color: Color(0xFFA6A6A6))
+                ),
+                const SizedBox(height: 40,),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.blue),
+                        SizedBox(width: 7,),
+                        Text('Favourite location', style: TextStyle(
+                          fontWeight: FontWeight.bold
+                        ),),
+                      ],
+                    ),
+                    Icon(Icons.info_outline, color: Color(0xFFA6A6A6),)
+                  ],
+                ),
+                const SizedBox(height: 30,),
+                Row(
+                  children: [
+                    const SizedBox(width: 25,),
+                    const Icon(Icons.location_pin, color: Colors.white, size: 16,),
+                    const SizedBox(width: 1,),
+                    const Expanded(child: Text('Padang Bulan Selayang Ii', style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white
+                    ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
+                    const SizedBox(width: 2,),
+                    Image.asset(randomWeather(), fit: BoxFit.fill, height: 30,),
+                    const SizedBox(width: 4,),
+                    Text('${randInt(23, 29)}°', style: const TextStyle(
+                      fontSize: 18
+                    )),
+                  ],
+                ),
+
+                const Divider(color: Colors.white24, thickness: 1, height: 50,),
+
+                const Row(
+                  children: [
+                    Icon(Icons.add_location_outlined, color: Color(0xFFA6A6A6)),
+                    SizedBox(width: 7,),
+                    Text('Other location', style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),),
+                  ],
+                ),
+                const SizedBox(height: 10,),
+                Row(
+                  children: [
+                    const SizedBox(width: 33,),
+                    const Expanded(child: Text('New York City', style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white
+                    ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
+                    const SizedBox(width: 2,),
+                    Image.asset(
+                      randomWeather(),
+                      fit: BoxFit.fill, 
+                      height: 30,
+                    ),
+                    const SizedBox(width: 4,),
+                    Text('${randInt(23, 29)}°', style: const TextStyle(
+                      fontSize: 18
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 20,),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 15)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      )
+                    ),
+                    backgroundColor: const MaterialStatePropertyAll(Color(0xFF3A3A3A))
+                  ),
+                  onPressed: () {},
+                  child: const Text('Manage locations', style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  )),
+                ),
+                const Divider(color: Colors.white24, thickness: 1, height: 40,),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info_outline, color: Color(0xFFA6A6A6),),
+                    SizedBox(width: 8,),
+                    Text('Report wrong location', style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16
+                  ))
+                  ],
+                ),
+                const SizedBox(height: 25,),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.headphones_sharp, color: Color(0xFFA6A6A6),),
+                    SizedBox(width: 8,),
+                    Text('Contact us', style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16
+                  ))
+                  ],
+                ),
               ],
             ),
           ),
@@ -42,7 +151,7 @@ class _HomePageState extends State<HomePage> {
 
           },
           backgroundColor: const Color(0xFF2D2D2D),
-          child: Image.asset('assets/img/news.png'),
+          child: Image.asset('assets/img/news.png', height: 60,),
         ),
         backgroundColor: Pallete.primary,
         appBar: AppBar(
@@ -88,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    Image.asset('assets/img/full_moon.png')
+                    Image.asset(randomWeather(), width: 56)
                   ],
                 ),
               ),
@@ -124,7 +233,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white54
                                   ),),
                                   const SizedBox(height: 10,),
-                                  Image.asset('assets/img/full_moon.png', width: 20,),
+                                  Image.asset(randomWeather(), width: 20,),
                                   const SizedBox(height: 10,),
                                   Text('${randInt(23, 29)}°', style: const TextStyle(
                                     fontSize: 12,
@@ -144,7 +253,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: SvgPicture.asset(
                           'assets/svg/line_temp.svg',
-                          semanticsLabel: 'Acme Logo'
                         ),
                       ),
                       Row(
@@ -242,35 +350,26 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold
                           ),),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.water_drop, size: 9, color: Colors.white,),
-                              const SizedBox(width: 2,),
-                              Text('${randInt(30, 80)}%', style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11
-                              ),),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Image.asset('assets/img/thunder.png')
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Image.asset('assets/img/thunder.png')
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text('${randInt(30, 35)}°${randInt(20, 25)}°', style: const TextStyle(
-                            fontWeight: FontWeight.bold
+                        Row(
+                          children: [
+                            const Icon(Icons.water_drop, size: 9, color: Colors.white,),
+                            const SizedBox(width: 2,),
+                            Text('${randInt(30, 80)}%', style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11
                             ),),
-                          )
+                          ],
+                        ),
+                        const SizedBox(width: 25,),
+                        Image.asset(randomWeather(), width: 20,),
+                        const SizedBox(width: 25,),
+                        Image.asset(randomWeather(), width: 20,),
+                        const SizedBox(width: 25, height: 30,),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Text('${randInt(30, 35)}°${randInt(20, 25)}°', style: const TextStyle(
+                          fontWeight: FontWeight.bold
+                          ),),
                         ),
                       ],
                     )
@@ -302,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold
                           ),),
                           const SizedBox(height: 20,),
-                          Image.asset('assets/img/sunrise.png')
+                          Image.asset('assets/img/sunrise.png', width: 61,)
                         ],
                       ),
                     ),
@@ -318,7 +417,8 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.bold
                           ),),
                           const SizedBox(height: 20,),
-                          Image.asset('assets/img/sunset.png')
+
+                          Image.asset('assets/img/sunset.png', width: 61,)
                         ],
                       ),
                     )
