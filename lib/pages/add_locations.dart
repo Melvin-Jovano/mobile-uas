@@ -1,0 +1,74 @@
+import 'package:flutter/material.dart';
+import 'package:mobile_uas/config/pallete.dart';
+
+class AddLocations extends StatefulWidget {
+  const AddLocations({super.key});
+
+  @override
+  State<AddLocations> createState() => _AddLocationsState();
+}
+
+class _AddLocationsState extends State<AddLocations> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Pallete.primary,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 15,
+              horizontal: 20
+            ),
+            child: ListView(
+              children: const [
+                Row(
+                  children: [
+                    Icon(Icons.arrow_back_ios, color: Colors.white,),
+                    SizedBox(width: 10,),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search location',
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic
+                          ),
+                          suffixIcon: null,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey, 
+                              width: 0.0
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                ),
+                SizedBox(height: 20,),
+
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))
+                  ),
+                  color: Colors.white10,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 15,
+                      horizontal: 20
+                    ),
+                    child: Text('placeholder'),
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+      ),
+    );
+  }
+}
