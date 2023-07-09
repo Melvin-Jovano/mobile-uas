@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
+import 'package:mobile_uas/pages/manage_locations.dart';
+import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
 import 'package:mobile_uas/utils/random_weather.dart';
@@ -23,8 +25,8 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30),
-              bottomRight: Radius.circular(30)),
+            topRight: Radius.circular(30),
+            bottomRight: Radius.circular(30)),
           ),
           backgroundColor: const Color(0xFF202020),
           child: Container(
@@ -108,12 +110,18 @@ class _HomePageState extends State<HomePage> {
                     padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 15)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(30),
                       )
                     ),
                     backgroundColor: const MaterialStatePropertyAll(Color(0xFF3A3A3A))
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ManageLocations()),
+                    );
+                  },
                   child: const Text('Manage locations', style: TextStyle(
                     fontWeight: FontWeight.bold
                   )),
@@ -178,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Row(
                       children: [
-                        const Text('27°', style: TextStyle(
+                        Text('${randInt(23, 29)}°', style: const TextStyle(
                           fontSize: 44
                         ),),
                         const SizedBox(width: 10,),
@@ -187,10 +195,10 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 10,),
-                            const Text('33° / 24°', style: TextStyle(
+                            Text('${randInt(30, 35)}° / ${randInt(23, 29)}°', style: const TextStyle(
                               fontSize: 12
                             ),),
-                            Text(DateFormat('EEEE, HH:mm').format(DateTime.now()), style: const TextStyle(
+                            Text(dateformat(), style: const TextStyle(
                               fontSize: 12
                             ),),
                           ],
