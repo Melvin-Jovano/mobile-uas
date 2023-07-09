@@ -23,47 +23,69 @@ class _AddLocationsState extends State<AddLocations> {
               vertical: 15,
               horizontal: 20
             ),
-            child: ListView(
-              children: const [
-                Row(
+            child: Column(
+              children: [
+                const Column(
                   children: [
-                    Icon(Icons.arrow_back_ios, color: Colors.white,),
-                    SizedBox(width: 10,),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search location',
-                          hintStyle: TextStyle(
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic
-                          ),
-                          suffixIcon: null,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.grey, 
-                              width: 0.0
+                    Row(
+                      children: [
+                        Icon(Icons.arrow_back_ios, color: Colors.white,),
+                        SizedBox(width: 10,),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Search location',
+                              hintStyle: TextStyle(
+                                color: Colors.white,
+                                fontStyle: FontStyle.italic
+                              ),
+                              suffixIcon: null,
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.grey, 
+                                  width: 0.0
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ]
                     ),
-                  ]
+                    SizedBox(height: 20,),
+                  ],
                 ),
-                SizedBox(height: 20,),
-
-                Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))
+                Expanded(
+                  child: ListView(
+                    children: const [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                        color: Colors.white10,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 25
+                          ),
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Text('New York City'),
+                                    subtitle: Text('New York, United States'),
+                                  ),
+                                  Divider(color: Colors.white24, thickness: 1, height: 10,),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  color: Colors.white10,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 20
-                    ),
-                    child: Text('placeholder'),
-                  ),
-                )
+                ),
               ],
             ),
           ),
