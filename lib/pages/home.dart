@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
+import 'package:mobile_uas/pages/news.dart';
 import 'package:mobile_uas/pages/settings.dart';
 import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
@@ -170,7 +171,12 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (_) => const NewsPage()
+              )
+            );
           },
           backgroundColor: const Color(0xFF2D2D2D),
           child: Image.asset('assets/img/news.png', height: 60,),
