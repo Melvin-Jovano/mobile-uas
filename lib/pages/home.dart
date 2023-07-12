@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
+import 'package:mobile_uas/pages/settings.dart';
 import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
@@ -34,11 +35,24 @@ class _HomePageState extends State<HomePage> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                const Align(
+                Align(
                   alignment: Alignment.centerRight,
-                  child: Icon(Icons.settings, color: Color(0xFFA6A6A6))
+                  child: IconButton(
+                    onPressed: (){
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                          builder: (_)=> const SettingsScreen()
+                        )
+                      );
+                    }, 
+                    icon: const Icon(
+                      Icons.settings, 
+                      color: Color(0xFFA6A6A6)
+                    )
+                  )
                 ),
-                const SizedBox(height: 40,),
+                const SizedBox(height: 10,),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
