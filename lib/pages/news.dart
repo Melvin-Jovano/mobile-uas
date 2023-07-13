@@ -9,6 +9,8 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  int newsLength = 17;
+  int showed = 5;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,17 +85,83 @@ class _NewsPageState extends State<NewsPage> {
               ),
             ),
 
-            Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20))
+            for(int i = 0; i < showed; i++)...[
+              Card(
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20))
+                ),
+                margin: EdgeInsets.only(bottom:20),
+                color: Colors.white10,
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(10),
+                  visualDensity: VisualDensity(vertical: 4),
+                  title: Row(
+                    children: [
+                      Container(
+                        width: 75,
+                        height: 75,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage("assets/img/smallNewsCover.png")
+                          )
+                        ),
+                      ),
+
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10)
+                      ),
+
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "CNN Indonesia • 1d ago",
+                              style: TextStyle(
+                                color: Colors.white54,
+                                fontSize: 13
+                              ),
+                            ),
+                            Text(
+                              "8 Daerah di Aceh Terendam Banjir Akibat Hujan Deras dan Angin Kencang",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+            if(showed < newsLength)
+            ElevatedButton(
+              style: ButtonStyle(
+                padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 14)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  )
+                ),
+                backgroundColor: const MaterialStatePropertyAll(Color(0xFF3A3A3A))
               ),
-              margin: EdgeInsets.only(bottom:20),
-              color: Colors.white10,
-              child: ListTile(
-                leading: Image.asset("assets/img/newsCover.png"),
-                title: Text("About Weather"),
-              ),
-            )
+              onPressed: () {
+                setState(() {
+                  showed += 5;
+                  if(showed > newsLength){
+                    showed = newsLength;
+                  }
+                });
+              },
+              child: const Text('Load More', style: TextStyle(
+                fontWeight: FontWeight.bold
+              )),
+            ),
           ],
         ),
       ),
