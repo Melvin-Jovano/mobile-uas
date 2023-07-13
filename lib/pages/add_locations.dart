@@ -25,13 +25,18 @@ class _AddLocationsState extends State<AddLocations> {
             ),
             child: Column(
               children: [
-                const Column(
+                Column(
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.arrow_back_ios, color: Colors.white,),
-                        SizedBox(width: 10,),
-                        Expanded(
+                        InkWell(
+                          child: const Icon(Icons.arrow_back_ios, color: Colors.white,),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(width: 10,),
+                        const Expanded(
                           child: TextField(
                             decoration: InputDecoration(
                               hintText: 'Search location',
@@ -51,7 +56,7 @@ class _AddLocationsState extends State<AddLocations> {
                         ),
                       ]
                     ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                   ],
                 ),
                 Expanded(

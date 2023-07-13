@@ -21,7 +21,7 @@ class _NewsPageState extends State<NewsPage> {
           onPressed: (){
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text("News"),
         centerTitle: true,
@@ -37,7 +37,7 @@ class _NewsPageState extends State<NewsPage> {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(20))
               ),
-              margin: EdgeInsets.only(bottom: 20),
+              margin: const EdgeInsets.only(bottom: 20),
               color: Colors.white10,
               child: Column(
                 children: [
@@ -90,11 +90,11 @@ class _NewsPageState extends State<NewsPage> {
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20))
                 ),
-                margin: EdgeInsets.only(bottom:20),
+                margin: const EdgeInsets.only(bottom:20),
                 color: Colors.white10,
                 child: ListTile(
-                  contentPadding: EdgeInsets.all(10),
-                  visualDensity: VisualDensity(vertical: 4),
+                  contentPadding: const EdgeInsets.all(10),
+                  visualDensity: const VisualDensity(vertical: 4),
                   title: Row(
                     children: [
                       Container(

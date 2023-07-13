@@ -23,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: (){
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
         title: const Text("Weather Settings"),
         centerTitle: true,
@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               margin: const EdgeInsets.only(bottom: 20),
               color: Colors.white10,
               child: Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 child: ListView(
                   shrinkWrap: true,
                   children: ListTile.divideTiles(
@@ -164,7 +164,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   showUnitDialog(BuildContext context){
     final prov = Provider.of<MainProvider>(context);
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(bottom: 500, right: 75),
+      insetPadding: const EdgeInsets.only(bottom: 500, right: 75),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20)
       ),
