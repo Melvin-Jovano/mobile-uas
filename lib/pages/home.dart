@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
+import 'package:mobile_uas/config/provider.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
 import 'package:mobile_uas/pages/news.dart';
 import 'package:mobile_uas/pages/settings.dart';
@@ -10,6 +13,8 @@ import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
 import 'package:mobile_uas/utils/random_weather.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,9 +24,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
+  @override
+  void initState() {
+    initLocations();
+    super.initState();
+  }
+
+  initLocations() async {
+    final storage = await SharedPreferences.getInstance();
+    List<Map> allLocations = [];
+    final otherLocation = storage.getStringList('locations');
+
+    if(otherLocation != null) {
+      for (var element in otherLocation) {
+        allLocations.add(jsonDecode(element));
+      }
+    }
+
+    if(context.mounted) {
+      Provider.of<MainProvider>(context, listen: false).setLocations = allLocations;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final prov = Provider.of<MainProvider>(context);
+
     return SafeArea(
       child: Scaffold(
         drawer: Drawer(
@@ -100,24 +129,32 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 10,),
-                Row(
-                  children: [
-                    const SizedBox(width: 33,),
-                    const Expanded(child: Text('New York City', style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white
-                    ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
-                    const SizedBox(width: 2,),
-                    Image.asset(
-                      randomWeather(),
-                      fit: BoxFit.fill, 
-                      height: 30,
+                for(int i = 0; i < prov.locations.length; i++)
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10
                     ),
-                    const SizedBox(width: 4,),
-                    Text('${randInt(23, 29)}°', style: const TextStyle(
-                      fontSize: 18
-                    )),
-                  ],
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 33,),
+                        Expanded(child: Text(prov.locations[i]['city'], style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white
+                        ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
+                        const SizedBox(width: 2,),
+                        Image.asset(
+                          randomWeather(),
+                          fit: BoxFit.fill, 
+                          height: 30,
+                        ),
+                        const SizedBox(width: 4,),
+                        Text('${randInt(23, 29)}°', style: const TextStyle(
+                          fontSize: 18
+                        )),
+                      ],
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20,),
                 ElevatedButton(

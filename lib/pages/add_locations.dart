@@ -4,7 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_uas/common/city.dart';
 import 'package:mobile_uas/config/pallete.dart';
+import 'package:mobile_uas/config/provider.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddLocations extends StatefulWidget {
@@ -22,6 +24,8 @@ class _AddLocationsState extends State<AddLocations> {
 
   @override
   Widget build(BuildContext context) {
+    final prov = Provider.of<MainProvider>(context);
+    
     return SafeArea(
       child: Scaffold(
         backgroundColor: Pallete.primary,
@@ -59,12 +63,14 @@ class _AddLocationsState extends State<AddLocations> {
                                   });
                                   final q = await Dio().get('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&namedetails=1&q=$val');
                                   q.data.forEach((c) {
-                                    setState(() {
-                                      cities.add(City(
-                                        city: c['namedetails']['name'],
-                                        display: c['display_name'], 
-                                      ));
-                                    });
+                                    if(c['namedetails'] != null && c['display_name'] != null) {
+                                      setState(() {
+                                        cities.add(City(
+                                          city: c['namedetails']['name'],
+                                          display: c['display_name'], 
+                                        ));
+                                      });
+                                    }
                                   });
                                   return;
                                 }
@@ -137,15 +143,26 @@ class _AddLocationsState extends State<AddLocations> {
                                             'display': cities[i].display,
                                             'createdAt': DateTime.now().toIso8601String()
                                           };
-                                          final locations = storage.getStringList('locations');
-                                          if(locations != null && locations.isNotEmpty) {
-                                            storage.setStringList('locations', [...locations, jsonEncode(selectedLocation)]);
+                                          final locationsStored = storage.getStringList('locations');
+                                          if(locationsStored != null && locationsStored.isNotEmpty) {
+                                            storage.setStringList('locations', [...locationsStored, jsonEncode(selectedLocation)]);
                                           } else {
                                             storage.setStringList('locations', [jsonEncode(selectedLocation)]);
                                           }
 
                                           if(context.mounted) {
-                                            Navigator.push(
+                                            List<Map> allLocations = [];
+                                            final otherLocation = storage.getStringList('locations');
+
+                                            if(otherLocation != null) {
+                                              for (var element in otherLocation) {
+                                                allLocations.add(jsonDecode(element));
+                                              }
+                                            }
+
+                                            prov.setLocations = allLocations;
+
+                                            Navigator.pushReplacement(
                                               context, 
                                               MaterialPageRoute(
                                                 builder: (_)=> const ManageLocations()
