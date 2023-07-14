@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_uas/common/city.dart';
 import 'package:mobile_uas/config/pallete.dart';
+import 'package:mobile_uas/pages/manage_locations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddLocations extends StatefulWidget {
   const AddLocations({super.key});
@@ -127,8 +130,28 @@ class _AddLocationsState extends State<AddLocations> {
                                   Column(
                                     children: [
                                       ListTile(
-                                        onTap: () {
+                                        onTap: () async {
+                                          final storage = await SharedPreferences.getInstance();
+                                          final selectedLocation = {
+                                            'city': cities[i].city,
+                                            'display': cities[i].display,
+                                            'createdAt': DateTime.now().toIso8601String()
+                                          };
+                                          final locations = storage.getStringList('locations');
+                                          if(locations != null && locations.isNotEmpty) {
+                                            storage.setStringList('locations', [...locations, jsonEncode(selectedLocation)]);
+                                          } else {
+                                            storage.setStringList('locations', [jsonEncode(selectedLocation)]);
+                                          }
 
+                                          if(context.mounted) {
+                                            Navigator.push(
+                                              context, 
+                                              MaterialPageRoute(
+                                                builder: (_)=> const ManageLocations()
+                                              )
+                                            );
+                                          }
                                         },
                                         contentPadding: EdgeInsets.zero,
                                         title: Text(cities[i].city, style: const TextStyle(

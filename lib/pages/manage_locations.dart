@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/pages/add_locations.dart';
 import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
 import 'package:mobile_uas/utils/random_weather.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageLocations extends StatefulWidget {
   const ManageLocations({super.key});
@@ -13,6 +16,27 @@ class ManageLocations extends StatefulWidget {
 }
 
 class _ManageLocationsState extends State<ManageLocations> {
+
+  List<Map> locations = [];
+
+  @override
+  void initState() {
+    initLocations();
+    super.initState();
+  }
+
+  initLocations() async {
+    final storage = await SharedPreferences.getInstance();
+    final otherLocation = storage.getStringList('locations');
+    if(otherLocation != null) {
+      for (var element in otherLocation) {
+        setState(() {
+          locations.add(jsonDecode(element));
+        });
+      }
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -146,6 +170,7 @@ class _ManageLocationsState extends State<ManageLocations> {
                     ],
                   ),
                   const SizedBox(height: 8,),
+                  for(int i = 0; i < locations.length; i++)
                   Card(
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20))
@@ -163,18 +188,18 @@ class _ManageLocationsState extends State<ManageLocations> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('Padang Bulan Selayang Ii', style: TextStyle(
+                                Text(locations[i]['city'], style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold
                                 ), maxLines: 1, overflow: TextOverflow.ellipsis,),
                                 const SizedBox(height: 5,),
-                                const Text('North Sumatra, Indonesia', style: TextStyle(
+                                Text(locations[i]['display'], style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFB1B1B1)
-                                ),),
+                                ), maxLines: 2, overflow: TextOverflow.ellipsis,),
                                 const SizedBox(height: 5,),
-                                Text(dateformat(format: 'EEE, d MMMM HH:mm'), style: const TextStyle(
+                                Text(dateformat(format: 'EEE, d MMMM HH:mm', date: DateTime.parse(locations[i]['createdAt'])), style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xFFB1B1B1)
