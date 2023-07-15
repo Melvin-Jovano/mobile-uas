@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:mobile_uas/common/manage_locations_provider.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/config/provider.dart';
 import 'package:mobile_uas/pages/add_locations.dart';
@@ -6,6 +9,7 @@ import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/rand_int.dart';
 import 'package:mobile_uas/utils/random_weather.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageLocations extends StatefulWidget {
   const ManageLocations({super.key});
@@ -20,13 +24,96 @@ class _ManageLocationsState extends State<ManageLocations> {
   void initState() {
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final prov = Provider.of<MainProvider>(context);
+    final manageLocationsProv = Provider.of<ManageLocationsProvider>(context);
     
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar: manageLocationsProv.isEditMode 
+          ? BottomNavigationBar(
+            backgroundColor: Pallete.primary,
+            fixedColor: Colors.white,
+            unselectedItemColor: Colors.white,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.star),
+                label: 'Set to Favourite',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.delete),
+                label: 'Delete',
+              ),
+            ],
+            onTap: (val) {
+              if(val == 0) {
+
+              } else if(val == 1) {
+                if(manageLocationsProv.manageLocationIds.isNotEmpty) {
+                  showDialog(
+                    context: context, 
+                    builder: (context) => AlertDialog(
+                      backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+                      content: Text('Delete ${manageLocationsProv.manageLocationIds.length} Locations?'),
+                      actions: [
+                        TextButton(
+                          child: const Text('No', style: TextStyle(
+                            color: Colors.white
+                          )),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Yes', style: TextStyle(
+                            color: Colors.white
+                          )),
+                          onPressed: () async {
+                            final storage = await SharedPreferences.getInstance();
+                            List<Map> allLocations = [];
+                            final filteredLocations = (storage.getStringList('locations') ?? []).where((i) => !manageLocationsProv.manageLocationIds.contains(jsonDecode(i)['id'])).toList();
+                            storage.setStringList('locations', filteredLocations);
+                            for (var element in filteredLocations) {
+                              allLocations.add(jsonDecode(element));
+                            }
+                            prov.setLocations = allLocations;
+                            manageLocationsProv.setManageLocationIds = [].cast<String>();
+
+                            manageLocationsProv.setIsEditMode = false;
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                  return;
+                }
+
+                showDialog(
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+                    content: const Text('You must select at least 1 location'),
+                    actions: [
+                      TextButton(
+                        child: const Text('Ok', style: TextStyle(
+                          color: Colors.white
+                        )),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ),
+                );
+              }
+            },
+          )
+          : null,
         backgroundColor: Pallete.primary,
         appBar: AppBar(
           leading: InkWell(
@@ -47,7 +134,12 @@ class _ManageLocationsState extends State<ManageLocations> {
               }
             ),
             const SizedBox(width: 7,),
-            const Icon(Icons.more_vert),
+            InkWell(
+              onTap: () {
+                manageLocationsProv.setIsEditMode = !manageLocationsProv.isEditMode;
+              },
+              child: const Icon(Icons.more_vert)
+            ),
             const SizedBox(width: 12,),
           ],
           backgroundColor: Colors.transparent,
@@ -82,7 +174,7 @@ class _ManageLocationsState extends State<ManageLocations> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
-                        horizontal: 20
+                        horizontal: 15
                       ),
                       child: Row(
                         children: [
@@ -165,10 +257,22 @@ class _ManageLocationsState extends State<ManageLocations> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 15,
-                        horizontal: 20
+                        horizontal: 15
                       ),
                       child: Row(
                         children: [
+                          if(manageLocationsProv.isEditMode)
+                          Checkbox(
+                            shape: const CircleBorder(),
+                            value: manageLocationsProv.manageLocationIds.contains(prov.locations[i]['id']),
+                            onChanged: (val) {
+                              if(val!) {
+                                manageLocationsProv.addManageLocationIds = prov.locations[i]['id'];
+                                return;
+                              }
+                              manageLocationsProv.removeManageLocationIds = prov.locations[i]['id'];
+                            }
+                          ),
                           Expanded(
                             flex: 2,
                             child: Column(
@@ -196,8 +300,8 @@ class _ManageLocationsState extends State<ManageLocations> {
                           Expanded(
                             flex: 1,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Image.asset(randomWeather(), width: 39,),
                                 const SizedBox(width: 8,),

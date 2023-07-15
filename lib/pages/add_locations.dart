@@ -8,6 +8,7 @@ import 'package:mobile_uas/config/provider.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class AddLocations extends StatefulWidget {
   const AddLocations({super.key});
@@ -141,6 +142,7 @@ class _AddLocationsState extends State<AddLocations> {
                                           final selectedLocation = {
                                             'city': cities[i].city,
                                             'display': cities[i].display,
+                                            'id': const Uuid().v4(),
                                             'createdAt': DateTime.now().toIso8601String()
                                           };
                                           final locationsStored = storage.getStringList('locations');
