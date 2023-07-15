@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -27,8 +26,25 @@ class _HomePageState extends State<HomePage> {
   
   @override
   void initState() {
+    initSelectedLocation();
     initLocations();
     super.initState();
+  }
+
+  initFavouriteLocations() async {
+    final storage = await SharedPreferences.getInstance();
+    List<Map> favouriteLocations = [];
+    final otherLocation = storage.getStringList('favouriteLocations');
+
+    if(otherLocation != null) {
+      for (var element in otherLocation) {
+        favouriteLocations.add(jsonDecode(element));
+      }
+    }
+
+    if(context.mounted) {
+      Provider.of<MainProvider>(context, listen: false).setFavouriteLocations = favouriteLocations;
+    }
   }
 
   initLocations() async {
@@ -44,6 +60,25 @@ class _HomePageState extends State<HomePage> {
 
     if(context.mounted) {
       Provider.of<MainProvider>(context, listen: false).setLocations = allLocations;
+    }
+  }
+
+  initSelectedLocation() async {
+    final storage = await SharedPreferences.getInstance();
+    final selectedLocation = storage.getString('selectedLocation');
+
+    if(context.mounted) {
+      if(selectedLocation != null) {
+        Provider.of<MainProvider>(context, listen: false).setSelectedLocation = selectedLocation;
+        return;
+      }
+
+      Provider.of<MainProvider>(context, listen: false).setSelectedLocation = {
+        'city': 'Padang Bulan Selayang Ii',
+        'display': 'Medan, Indonesia',
+        'id': '7c518ade-d340-4561-a766-cc8b8bd6b1a3',
+        'createdAt': DateTime.now().toIso8601String()
+      };
     }
   }
 
@@ -99,12 +134,13 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 30,),
+                for(int i = 0; i < prov.favouriteLocations.length; i++)
                 Row(
                   children: [
                     const SizedBox(width: 25,),
                     const Icon(Icons.location_pin, color: Colors.white, size: 16,),
                     const SizedBox(width: 1,),
-                    const Expanded(child: Text('Padang Bulan Selayang Ii', style: TextStyle(
+                    Expanded(child: Text(prov.favouriteLocations[i]['city'], style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white
                     ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
@@ -221,11 +257,11 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Pallete.primary,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: const Row(
+          title: Row(
             children: [
-              Text('Padang Bulan Selayang Ii'),
-              SizedBox(width: 10,),
-              Icon(Icons.location_pin)
+              Text(prov.selectedLocation['city'] ?? 'Loading...'),
+              const SizedBox(width: 10,),
+              const Icon(Icons.location_pin)
             ],
           ),
         ),

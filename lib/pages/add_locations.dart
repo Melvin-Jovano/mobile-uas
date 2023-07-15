@@ -64,7 +64,7 @@ class _AddLocationsState extends State<AddLocations> {
                                   });
                                   final q = await Dio().get('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&namedetails=1&q=$val');
                                   q.data.forEach((c) {
-                                    if(c['namedetails'] != null && c['display_name'] != null) {
+                                    if(c['namedetails'] != null && c['namedetails']['name'] != null && c['display_name'] != null) {
                                       setState(() {
                                         cities.add(City(
                                           city: c['namedetails']['name'],

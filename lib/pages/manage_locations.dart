@@ -47,52 +47,8 @@ class _ManageLocationsState extends State<ManageLocations> {
                 label: 'Delete',
               ),
             ],
-            onTap: (val) {
-              if(val == 0) {
-
-              } else if(val == 1) {
-                if(manageLocationsProv.manageLocationIds.isNotEmpty) {
-                  showDialog(
-                    context: context, 
-                    builder: (context) => AlertDialog(
-                      backgroundColor: const Color.fromARGB(255, 26, 26, 26),
-                      content: Text('Delete ${manageLocationsProv.manageLocationIds.length} Locations?'),
-                      actions: [
-                        TextButton(
-                          child: const Text('No', style: TextStyle(
-                            color: Colors.white
-                          )),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('Yes', style: TextStyle(
-                            color: Colors.white
-                          )),
-                          onPressed: () async {
-                            final storage = await SharedPreferences.getInstance();
-                            List<Map> allLocations = [];
-                            final filteredLocations = (storage.getStringList('locations') ?? []).where((i) => !manageLocationsProv.manageLocationIds.contains(jsonDecode(i)['id'])).toList();
-                            storage.setStringList('locations', filteredLocations);
-                            for (var element in filteredLocations) {
-                              allLocations.add(jsonDecode(element));
-                            }
-                            prov.setLocations = allLocations;
-                            manageLocationsProv.setManageLocationIds = [].cast<String>();
-
-                            manageLocationsProv.setIsEditMode = false;
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  );
-                  return;
-                }
-
+            onTap: (val) async {
+              if(manageLocationsProv.manageLocationIds.isEmpty) {
                 showDialog(
                   context: context, 
                   builder: (context) => AlertDialog(
@@ -105,6 +61,70 @@ class _ManageLocationsState extends State<ManageLocations> {
                         )),
                         onPressed: () {
                           Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ),
+                );
+                return;
+              }
+
+              if(val == 0) {
+                final storage = await SharedPreferences.getInstance();
+                final favouriteLocations = prov.favouriteLocations;
+                for(final locationId in manageLocationsProv.manageLocationIds) {
+                  final findLocationById = favouriteLocations.where((e) => e['id'] == locationId);
+                  if(findLocationById.isEmpty) {
+                    final favouriteLocations = storage.getStringList('favouriteLocations') ?? [];
+                    final findLocation = prov.locations.firstWhere((e) => e['id'] == locationId);
+                    prov.setFavouriteLocations = [...prov.favouriteLocations, findLocation];
+                    storage.setStringList('favouriteLocations', [...favouriteLocations, jsonEncode(findLocation)]);
+                  }
+                }
+                manageLocationsProv.setManageLocationIds = [].cast<String>();
+                manageLocationsProv.setIsEditMode = false;
+              } else if(val == 1) {
+                showDialog(
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    backgroundColor: const Color.fromARGB(255, 26, 26, 26),
+                    content: Text('Delete ${manageLocationsProv.manageLocationIds.length} Locations?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('No', style: TextStyle(
+                          color: Colors.white
+                        )),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Yes', style: TextStyle(
+                          color: Colors.white
+                        )),
+                        onPressed: () async {
+                          final storage = await SharedPreferences.getInstance();
+                          List<Map> allLocations = [];
+                          final filteredLocations = (storage.getStringList('locations') ?? []).where((i) => !manageLocationsProv.manageLocationIds.contains(jsonDecode(i)['id'])).toList();
+                          storage.setStringList('locations', filteredLocations);
+                          for (var element in filteredLocations) {
+                            allLocations.add(jsonDecode(element));
+                          }
+                          prov.setLocations = allLocations;
+
+                          List<Map> allFavouriteLocations = [];
+                          final filteredFavouriteLocations = (storage.getStringList('favouriteLocations') ?? []).where((i) => !manageLocationsProv.manageLocationIds.contains(jsonDecode(i)['id'])).toList();
+                          storage.setStringList('favouriteLocations', filteredFavouriteLocations);
+                          for (var element in filteredFavouriteLocations) {
+                            allFavouriteLocations.add(jsonDecode(element));
+                          }
+                          prov.setFavouriteLocations = allFavouriteLocations;
+
+                          manageLocationsProv.setManageLocationIds = [].cast<String>();
+                          manageLocationsProv.setIsEditMode = false;
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       )
                     ],
@@ -166,69 +186,87 @@ class _ManageLocationsState extends State<ManageLocations> {
                     ],
                   ),
                   const SizedBox(height: 8,),
-                  Card(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))
-                    ),
-                    color: Colors.white10,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 15,
-                        horizontal: 15
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Padang Bulan Selayang Ii', style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                                ), maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                const SizedBox(height: 5,),
-                                const Text('North Sumatra, Indonesia', style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFB1B1B1)
-                                ),),
-                                const SizedBox(height: 5,),
-                                Text(dateformat(format: 'EEE, d MMMM HH:mm'), style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFB1B1B1)
-                                ),),
-                              ],
-                            ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for(int i = 0; i < prov.favouriteLocations.length; i++)
+                      Card(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                        ),
+                        color: Colors.white10,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 15
                           ),
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(randomWeather(), width: 39,),
-                                const SizedBox(width: 8,),
-                                Column(
+                          child: Row(
+                            children: [
+                              if(manageLocationsProv.isEditMode)
+                              Checkbox(
+                                shape: const CircleBorder(),
+                                value: manageLocationsProv.manageLocationIds.contains(prov.favouriteLocations[i]['id']),
+                                onChanged: (val) {
+                                  if(val!) {
+                                    manageLocationsProv.addManageLocationIds = prov.favouriteLocations[i]['id'];
+                                    return;
+                                  }
+                                  manageLocationsProv.removeManageLocationIds = prov.favouriteLocations[i]['id'];
+                                }
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('${randInt(23, 29)}°', style: const TextStyle(
-                                      fontSize: 26
+                                    Text(prov.favouriteLocations[i]['city'], style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                    ), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                    const SizedBox(height: 5,),
+                                    Text(prov.favouriteLocations[i]['display'], style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFB1B1B1)
                                     ),),
-                                    const SizedBox(height: 2,),
-                                    Text('${randInt(30, 35)}° / ${randInt(23, 29)}°', style: const TextStyle(
-                                      fontSize: 10,
+                                    const SizedBox(height: 5,),
+                                    Text(dateformat(format: 'EEE, d MMMM HH:mm'), style: const TextStyle(
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Color(0xFFB1B1B1)
                                     ),),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(randomWeather(), width: 39,),
+                                    const SizedBox(width: 8,),
+                                    Column(
+                                      children: [
+                                        Text('${randInt(23, 29)}°', style: const TextStyle(
+                                          fontSize: 26
+                                        ),),
+                                        const SizedBox(height: 2,),
+                                        Text('${randInt(30, 35)}° / ${randInt(23, 29)}°', style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFFB1B1B1)
+                                        ),),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   const SizedBox(height: 20,)
                 ],
