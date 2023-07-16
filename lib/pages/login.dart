@@ -5,15 +5,17 @@ import 'package:mobile_uas/pages/home.dart';
 import 'package:mobile_uas/pages/register.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class Login extends StatelessWidget {
-  const Login({super.key});
+  Login({super.key});
+
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final prov = Provider.of<MainProvider>(context);
     
-    TextEditingController usernameController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
 
     return SafeArea(
       child: GestureDetector(
@@ -31,7 +33,7 @@ class Login extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const Register()),
+                      MaterialPageRoute(builder: (context) => Register()),
                     );
                   },
                   child: const Row(
@@ -66,6 +68,11 @@ class Login extends StatelessWidget {
                     TextField(
                       controller: usernameController,
                       decoration: const InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white
+                          )
+                        ),
                         hintText: 'Username',
                         hintStyle: TextStyle(
                           color: Colors.white,
@@ -78,6 +85,11 @@ class Login extends StatelessWidget {
                       autocorrect: false,
                       controller: passwordController,
                       decoration: const InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white
+                          )
+                        ),
                         hintText: 'Password',
                         hintStyle: TextStyle(
                           color: Colors.white,

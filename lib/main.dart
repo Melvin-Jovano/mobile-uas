@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             fillColor: MaterialStateColor.resolveWith((states) => Colors.white)
           )
         ),
-        home: const Login(),
+        home: Login(),
       ),
     );
   }

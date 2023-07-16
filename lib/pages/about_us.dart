@@ -132,8 +132,8 @@ class AboutUs extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20)
       ),
-      backgroundColor: Color(0xFF3A3A3A),
-      contentPadding: EdgeInsets.symmetric(vertical: 20),
+      backgroundColor: const Color(0xFF3A3A3A),
+      contentPadding: const EdgeInsets.symmetric(vertical: 20),
       children: [
         for(int i = 0; i < members.length; i++)
         Padding(
