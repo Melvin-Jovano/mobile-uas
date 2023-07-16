@@ -53,14 +53,14 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context).showMaterialBanner(
       MaterialBanner(
         padding: const EdgeInsets.all(20),
-        content: Text('Hello there, ${prov.username}'),
+        content: Text('Welcome back, ${prov.username}'),
         backgroundColor: const Color.fromARGB(255, 34, 34, 34),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             },
-            child: const Text('DISMISS', style: TextStyle(
+            child: const Text('Close', style: TextStyle(
               color: Colors.white
             ),),
           ),

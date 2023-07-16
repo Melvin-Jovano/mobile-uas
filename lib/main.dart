@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_uas/common/manage_locations_provider.dart';
 import 'package:mobile_uas/config/provider.dart';
-import 'package:mobile_uas/pages/home.dart';
+import 'package:mobile_uas/pages/login.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
             fillColor: MaterialStateColor.resolveWith((states) => Colors.white)
           )
         ),
-        home: const HomePage(),
+        home: const Login(),
       ),
     );
   }
