@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobile_uas/common/manage_locations_provider.dart';
 import 'package:mobile_uas/config/pallete.dart';

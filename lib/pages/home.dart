@@ -43,14 +43,36 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     initSelectedLocation();
     initLocations();
+    initFavouriteLocations();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => showBanner());
+  }
+
+  showBanner() {
+    final prov = Provider.of<MainProvider>(context, listen: false);
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        padding: const EdgeInsets.all(20),
+        content: Text('Hello there, ${prov.username}'),
+        backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+            },
+            child: const Text('DISMISS', style: TextStyle(
+              color: Colors.white
+            ),),
+          ),
+        ],
+      ),
+    );
   }
 
   initFavouriteLocations() async {
     final storage = await SharedPreferences.getInstance();
     List<Map> favouriteLocations = [];
     final otherLocation = storage.getStringList('favouriteLocations');
-
     if(otherLocation != null) {
       for (var element in otherLocation) {
         favouriteLocations.add(jsonDecode(element));
@@ -84,7 +106,7 @@ class _HomePageState extends State<HomePage> {
 
     if(context.mounted) {
       if(selectedLocation != null) {
-        Provider.of<MainProvider>(context, listen: false).setSelectedLocation = selectedLocation;
+        Provider.of<MainProvider>(context, listen: false).setSelectedLocation = jsonDecode(selectedLocation);
         return;
       }
 
@@ -150,22 +172,32 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 30,),
                 for(int i = 0; i < prov.favouriteLocations.length; i++)
-                Row(
-                  children: [
-                    const SizedBox(width: 25,),
-                    const Icon(Icons.location_pin, color: Colors.white, size: 16,),
-                    const SizedBox(width: 1,),
-                    Expanded(child: Text(prov.favouriteLocations[i]['city'], style: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.white
-                    ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
-                    const SizedBox(width: 2,),
-                    Image.asset(randomWeather(), fit: BoxFit.fill, height: 30,),
-                    const SizedBox(width: 4,),
-                    Text('${randInt(23, 29)}°', style: const TextStyle(
-                      fontSize: 18
-                    )),
-                  ],
+                InkWell(
+                  onTap: () async {
+                    final storage = await SharedPreferences.getInstance();
+                    storage.setString('selectedLocation', jsonEncode(prov.favouriteLocations[i]));
+                    prov.setSelectedLocation = prov.favouriteLocations[i];
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10
+                    ),
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 33,),
+                        Expanded(child: Text(prov.favouriteLocations[i]['city'], style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white
+                        ), maxLines: 1, overflow: TextOverflow.ellipsis,),),
+                        const SizedBox(width: 2,),
+                        Image.asset(randomWeather(), fit: BoxFit.fill, height: 30,),
+                        const SizedBox(width: 4,),
+                        Text('${randInt(23, 29)}°', style: const TextStyle(
+                          fontSize: 18
+                        )),
+                      ],
+                    ),
+                  ),
                 ),
 
                 const Divider(color: Colors.white24, thickness: 1, height: 50,),
@@ -182,6 +214,11 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 10,),
                 for(int i = 0; i < prov.locations.length; i++)
                 InkWell(
+                  onTap: () async {
+                    final storage = await SharedPreferences.getInstance();
+                    storage.setString('selectedLocation', jsonEncode(prov.locations[i]));
+                    prov.setSelectedLocation = prov.locations[i];
+                  },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10
@@ -364,7 +401,14 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           title: Row(
             children: [
-              Text(prov.selectedLocation['city'] ?? 'Loading...'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.65,
+                child: Text(
+                  prov.selectedLocation['city'] ?? 'Loading...', 
+                  maxLines: 1, 
+                  overflow: TextOverflow.ellipsis,
+                )
+              ),
               const SizedBox(width: 10,),
               const Icon(Icons.location_pin)
             ],
