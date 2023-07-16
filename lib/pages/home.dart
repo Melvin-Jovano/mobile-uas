@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobile_uas/config/days.dart';
 import 'package:mobile_uas/config/pallete.dart';
 import 'package:mobile_uas/config/provider.dart';
+import 'package:mobile_uas/pages/about_us.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
 import 'package:mobile_uas/pages/news.dart';
 import 'package:mobile_uas/pages/settings.dart';
@@ -23,6 +24,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List items = [
+    {
+      "name" : "E-Mail",
+      "img" : "assets/img/Gmail.png"
+    },
+    {
+      "name" : "Instagram",
+      "img" : "assets/img/Instagram.png"
+    },
+    {
+      "name" : "Facebook",
+      "img" : "assets/img/Facebook.png"
+    }
+  ];
   
   @override
   void initState() {
@@ -227,16 +242,106 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 25,),
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(Icons.headphones_sharp, color: Color(0xFFA6A6A6),),
-                    SizedBox(width: 8,),
-                    Text('Contact us', style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16
-                  ))
-                  ],
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                    showModalBottomSheet(
+                      useSafeArea: true,
+                      enableDrag: true,
+                      context: context,
+                      backgroundColor: Pallete.primary,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(25)
+                        )
+                      ),
+                      builder: (context){
+                        return SizedBox(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const ListTile(
+                                title: Text(
+                                  "Contact Us",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                tileColor: Colors.white12,
+                              ),
+                              
+                              Container(
+                                color: Colors.white24,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      for(int i = 0; i < items.length; i++)
+                                      InkWell(
+                                        onTap: () {
+                                          
+                                        },
+                                        child: Wrap(
+                                          crossAxisAlignment: WrapCrossAlignment.center,
+                                          direction: Axis.vertical,
+                                          children: [
+                                            Image(
+                                              image: AssetImage(
+                                                items[i]['img']
+                                              ),
+                                              width: 60,
+                                              height: 60,
+                                            ),
+                                            Text(
+                                              items[i]['name']
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }
+                    );
+                  },
+                  child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.headphones_sharp, color: Color(0xFFA6A6A6),),
+                      SizedBox(width: 8,),
+                      Text('Contact us', style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                    ))
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25,),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (_) => const AboutUs()
+                      )
+                    );
+                  },
+                  child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.help_outline, color: Color(0xFFA6A6A6),),
+                      SizedBox(width: 8,),
+                      Text('About us', style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                    ))
+                    ],
+                  ),
                 ),
               ],
             ),
