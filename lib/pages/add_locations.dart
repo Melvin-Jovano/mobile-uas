@@ -167,7 +167,7 @@ class _AddLocationsState extends State<AddLocations> {
                                             Navigator.pushReplacement(
                                               context, 
                                               MaterialPageRoute(
-                                                builder: (_)=> const ManageLocations()
+                                                builder: (_)=> ManageLocations(snack: true, city: cities[i].city,)
                                               )
                                             );
                                           }

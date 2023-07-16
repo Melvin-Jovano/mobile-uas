@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageLocations extends StatefulWidget {
-  const ManageLocations({super.key});
+  const ManageLocations({super.key, this.snack, this.city});
+  final bool? snack;
+  final String? city;
 
   @override
   State<ManageLocations> createState() => _ManageLocationsState();
@@ -23,6 +25,15 @@ class _ManageLocationsState extends State<ManageLocations> {
   @override
   void initState() {
     super.initState();
+    if(widget.snack == true){
+      Future.delayed(Duration.zero, (){
+        _showSnackBar();
+      });
+    }
+  }
+
+  void _showSnackBar(){
+    ScaffoldMessenger.of(context).showSnackBar(showSnackBar(context));
   }
 
   @override
@@ -368,6 +379,21 @@ class _ManageLocationsState extends State<ManageLocations> {
             ],
           ),
         )
+      ),
+    );
+  }
+
+  showSnackBar(BuildContext global){
+    return SnackBar(
+      behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 6),
+      content: Text(
+        "${widget.city} Added Successfully !"
+      ),
+      action: SnackBarAction(
+        label: "Dismiss",
+        textColor: Colors.white,
+        onPressed: ()=> ScaffoldMessenger.of(context).removeCurrentSnackBar(),
       ),
     );
   }
