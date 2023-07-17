@@ -8,6 +8,7 @@ import 'package:mobile_uas/config/provider.dart';
 import 'package:mobile_uas/pages/about_us.dart';
 import 'package:mobile_uas/pages/manage_locations.dart';
 import 'package:mobile_uas/pages/news.dart';
+import 'package:mobile_uas/pages/login.dart';
 import 'package:mobile_uas/pages/settings.dart';
 import 'package:mobile_uas/utils/dateformat.dart';
 import 'package:mobile_uas/utils/hour_rotation.dart';
@@ -374,6 +375,28 @@ class _HomePageState extends State<HomePage> {
                       Icon(Icons.help_outline, color: Color(0xFFA6A6A6),),
                       SizedBox(width: 8,),
                       Text('About us', style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                    ))
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25,),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(
+                        builder: (_) => Login()
+                      )
+                    );
+                  },
+                  child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(Icons.logout, color: Color(0xFFA6A6A6),),
+                      SizedBox(width: 8,),
+                      Text('Logout', style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16
                     ))
